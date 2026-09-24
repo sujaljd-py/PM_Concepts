@@ -1,1 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yanolja Cloud Solution | Rules Configuration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brandColor:#F54B1E; --primary:#1E1928; --bodyColor:#1E1928; --deepGrey:#555055; --mediumGrey:#8C8282;
+  --background:#F2F6F9; --backgroundAlt:#F3F3F3; --brandLight:#F5EBE1; --white:#FFFFFF;
+  --borderColorAlt:#E6E6E6; --borderColor:#D5D5D5; --gray:#E8E8E8; --successColor:#00A651; --errorColor:#FF5353;
+  --yellow:#FFC21A; --disabledBg:#F5F5F5; --disabledText:#BFBFBF; --placeholder:#BFBFBF;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Roboto,-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--bodyColor);background:var(--background);overflow:hidden}
+button{font-family:inherit}
+input,select{font-family:inherit}
 
+/* ---------- Header ---------- */
+.hdr{position:fixed;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid var(--borderColorAlt);display:flex;align-items:center;padding:0 14px 0 8px;z-index:20}
+.icon-btn{background:none;border:0;cursor:pointer;color:var(--primary);display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;font-size:20px;position:relative;padding:0}
+.icon-btn:hover{background:var(--backgroundAlt)}
+.prop{display:flex;align-items:center;gap:10px;margin-left:6px;min-width:150px;cursor:pointer}
+.prop .nm{font-weight:700;font-size:16px;line-height:18px}
+.prop .id{font-size:12px;line-height:14px}
+.prop .chev{font-size:12px;margin-left:24px;color:var(--deepGrey)}
+.yb{width:30px;height:30px;border-radius:50%;background:var(--yellow);border:0;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;margin-left:8px;color:var(--primary)}
+.yb svg path{fill:var(--primary)}
+.search{margin-left:auto;margin-right:auto;width:420px;height:38px;border:1px solid var(--borderColor);border-radius:4px;display:flex;align-items:center;padding:0 10px;gap:8px;color:var(--mediumGrey)}
+.search input{border:0;outline:0;flex:1;font-size:13px;color:var(--bodyColor)}
+.search input::placeholder{color:#A9A4A4}
+.hdr-right{display:flex;align-items:center;gap:6px}
+.hdr-right .sep{width:1px;height:30px;background:var(--borderColorAlt);margin:0 6px}
+.badge{position:absolute;top:1px;right:1px;background:var(--errorColor);color:#fff;font-size:10px;line-height:14px;min-width:16px;height:16px;border-radius:8px;padding:0 4px;border:1px solid #fff}
+.circle-bg{background:var(--backgroundAlt)}
+
+/* ---------- Sidebar ---------- */
+.side{position:fixed;top:56px;left:0;bottom:0;width:60px;background:#fff;border-right:1px solid var(--borderColorAlt);display:flex;flex-direction:column;align-items:center;padding-top:8px;z-index:10}
+.side .it{width:48px;height:40px;display:flex;align-items:center;justify-content:center;font-size:17px;border-radius:6px;cursor:pointer;color:var(--primary);margin-bottom:2px;position:relative}
+.side .it:hover{background:var(--backgroundAlt)}
+.side .it.sel{background:var(--background)}
+.side .it .tip{display:none;position:absolute;left:54px;top:50%;transform:translateY(-50%);background:var(--primary);color:#fff;font-size:12px;white-space:nowrap;padding:6px 10px;border-radius:4px;z-index:30}
+.side .it:hover .tip{display:block}
+.side .expand{margin-top:auto;width:60px;height:48px;display:flex;align-items:center;justify-content:center;border-top:1px solid var(--borderColorAlt);cursor:pointer;background:var(--background)}
+
+/* ---------- Content ---------- */
+.content{position:fixed;top:56px;left:60px;right:0;bottom:0;padding:14px 14px 14px 14px;display:flex}
+.card{background:#fff;flex:1;display:flex;flex-direction:column;min-height:0;border-radius:2px;box-shadow:0 0 2px rgba(0,0,0,.04)}
+.topbar{display:flex;align-items:center;padding:12px 14px;border-bottom:1px solid var(--borderColorAlt);gap:10px;min-height:52px}
+.topbar .lbl{font-size:15px;font-weight:500}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar .small{font-size:12.5px}
+.scroll{flex:1;overflow:auto;min-height:0}
+.footer{display:flex;justify-content:flex-end;gap:14px;padding:12px 18px;border-top:1px solid var(--borderColorAlt);background:#fff}
+
+/* ---------- Buttons ---------- */
+.btn{height:32px;padding:0 15px;border-radius:4px;border:1px solid var(--borderColor);background:#fff;color:var(--primary);font-size:13px;cursor:pointer;transition:border-color .15s,color .15s}
+.btn:hover{border-color:var(--primary)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.primary:hover{opacity:.9}
+.btn.outline{border-color:var(--primary)}
+.btn:disabled{background:var(--disabledBg);color:var(--disabledText);border-color:var(--borderColor);cursor:not-allowed}
+.btn.sm{height:28px;padding:0 10px;font-size:12.5px}
+
+/* ---------- Switch ---------- */
+.sw{position:relative;width:28px;height:16px;border-radius:8px;background:rgba(0,0,0,.25);border:0;cursor:pointer;padding:0;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.sw.on{background:var(--primary)}
+.sw.on::after{left:14px}
+.sw.lg{width:32px;height:18px;border-radius:9px}
+.sw.lg::after{width:14px;height:14px}
+.sw.lg.on::after{left:16px}
+
+/* ---------- Sections ---------- */
+.rule{border-bottom:1px solid var(--borderColorAlt);padding-bottom:22px}
+.rule.hidden-by-filter{display:none}
+.rule-head{display:flex;align-items:center;gap:12px;padding:20px 16px 14px}
+.rule-head h3{margin:0;font-size:19px;font-weight:500;letter-spacing:.1px}
+.info{display:inline-flex;align-items:center;color:var(--primary);cursor:help;position:relative}
+.info svg{width:17px;height:17px}
+.th .info svg{width:13px;height:13px}
+.info[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:var(--primary);color:#fff;font-size:12px;font-weight:400;line-height:1.4;padding:6px 10px;border-radius:4px;width:max-content;max-width:260px;white-space:normal;z-index:40}
+.rt-tag{display:none;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--brandColor);background:var(--brandLight);border-radius:4px;padding:3px 8px}
+body.rt-mode .rt-tag{display:inline-flex}
+
+table.grid{border-collapse:collapse}
+table.grid th{background:var(--backgroundAlt);text-align:left;font-weight:500;font-size:13.5px;padding:14px 12px;white-space:nowrap}
+table.grid td{vertical-align:middle;padding:7px 12px;border-bottom:1px solid #F0F0F0;font-size:13.5px;white-space:nowrap}
+table.grid tr:last-child td{border-bottom:0}
+table.grid .x{text-align:center;width:40px}
+.th{display:inline-flex;align-items:center;gap:4px}
+
+/* ---------- Inputs ---------- */
+.in{height:30px;border:1px solid var(--borderColor);border-radius:3px;padding:0 10px;font-size:13px;color:var(--bodyColor);background:#fff;outline:0;transition:border-color .15s}
+.in:hover{border-color:var(--primary)}
+.in:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(30,25,40,.08)}
+.in::placeholder{color:var(--placeholder)}
+.in:disabled{background:var(--disabledBg);color:var(--disabledText);cursor:not-allowed;border-color:var(--borderColor)}
+.grp{display:inline-flex;align-items:stretch}
+.grp .add{height:30px;min-width:38px;border:1px solid var(--borderColor);border-right:0;border-radius:3px 0 0 3px;background:#FAFAFA;font-size:13px;color:var(--bodyColor);cursor:pointer;padding:0 10px}
+.grp .add:hover:not(:disabled){background:#F0F0F0}
+.grp .add:disabled{color:var(--disabledText);cursor:not-allowed;background:var(--disabledBg)}
+.grp .in{border-radius:0 3px 3px 0}
+.grp .suf{height:30px;min-width:34px;border:1px solid var(--borderColor);border-left:0;border-radius:0 3px 3px 0;background:#FAFAFA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
+.grp .in.pre{border-radius:3px 0 0 3px}
+.w-add{width:118px}.w-add-lg{width:118px}
+.w-scale{width:78px}
+.w-pct{width:60px}
+.sel-native{appearance:none;-webkit-appearance:none;padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23BFBFBF' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;cursor:pointer}
+.timebox{position:relative;display:inline-block}
+.timebox .in{width:116px;padding-right:28px}
+.timebox svg{position:absolute;right:9px;top:8px;width:14px;height:14px;color:#BFBFBF;pointer-events:none}
+.datebox{display:inline-flex;align-items:center;height:30px;border:1px solid var(--borderColor);border-radius:3px;padding:0 8px;gap:6px;background:#fff}
+.datebox:hover{border-color:var(--primary)}
+.datebox input{border:0;outline:0;width:86px;font-size:13px;color:var(--bodyColor);background:transparent}
+.datebox svg{color:#BFBFBF;width:14px;height:14px}
+.datebox.dis{background:var(--disabledBg)}.datebox.dis input{color:var(--disabledText)}
+
+.act{display:flex;gap:10px;align-items:center;height:30px}
+.act button{background:none;border:0;padding:0;cursor:pointer;display:inline-flex}
+.act button svg{width:15px;height:15px}
+.act .rm{color:#FF8C8C}.act .rm:hover{color:var(--errorColor)}
+.act .ad{color:#52C41A}.act .ad:hover{color:#389E0D}
+.act button:disabled{opacity:.45;cursor:not-allowed}
+
+.days{display:inline-flex;gap:6px;align-items:center}
+.chk{width:16px;height:16px;border-radius:3px;border:1px solid var(--borderColor);background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;margin-right:10px;padding:0}
+.chk.on{background:var(--primary);border-color:var(--primary)}
+.chk svg{width:10px;height:10px;color:#fff;display:none}.chk.on svg{display:block}
+.day{width:30px;height:30px;border-radius:50%;border:0;background:var(--primary);color:#fff;font-size:12px;cursor:pointer}
+.day.off{background:#fff;color:var(--primary);box-shadow:inset 0 0 0 1px var(--borderColor)}
+
+/* WeekDay */
+.wk td{padding:12px 12px}
+.wk th{width:100px}
+.wk .in{width:74px}
+
+/* Lead time */
+.lt-top{display:flex;align-items:center;gap:14px;padding:0 16px 14px;flex-wrap:wrap}
+.lt-top .l{font-weight:500;font-size:14px;margin-right:8px}
+.lt-top .gap{flex:1}
+.lt-top label{font-size:13px}
+.lt-grid{display:grid;grid-template-columns:repeat(6,176px);column-gap:26px;row-gap:12px;padding:0 16px}
+.lt-cell .dl{font-size:13px;margin-bottom:5px}
+.lt-cell .in{width:176px}
+
+/* ---------- Select (antd look) ---------- */
+.aselect{position:relative;display:inline-block}
+.aselect .trigger{height:32px;min-width:128px;border:1px solid var(--borderColor);border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 11px;font-size:14px;color:var(--bodyColor);cursor:pointer}
+.aselect .trigger:hover,.aselect.open .trigger{border-color:var(--primary)}
+.aselect .trigger svg{width:11px;height:11px;color:#BFBFBF;transition:transform .2s}
+.aselect.open .trigger svg{transform:rotate(180deg)}
+.aselect .menu{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:100%;background:#fff;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.08),0 3px 6px -4px rgba(0,0,0,.12),0 9px 28px 8px rgba(0,0,0,.05);padding:4px;z-index:50}
+.aselect.open .menu{display:block}
+.aselect .opt{padding:6px 12px;border-radius:4px;font-size:14px;cursor:pointer;white-space:nowrap}
+.aselect .opt:hover{background:#F5F5F5}
+.aselect .opt.sel{background:var(--backgroundAlt);font-weight:500}
+
+/* ---------- Room type bar (NEW) ---------- */
+.rtbar{display:none;border-bottom:1px solid var(--borderColorAlt);padding:18px 16px 18px;background:#FBFCFD}
+body.rt-mode .rtbar{display:block}
+.rtbar .row1{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.rtbar h3{margin:0;font-size:19px;font-weight:500}
+.rtbar .row1 .right{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px}
+.rtbar .copy-sel{height:30px;min-width:170px}
+.rt-list{display:flex;gap:10px;flex-wrap:wrap}
+.rt-item{border:1px solid var(--borderColor);background:#fff;border-radius:6px;padding:9px 14px 9px 12px;cursor:pointer;min-width:168px;text-align:left;display:flex;flex-direction:column;gap:3px;transition:border-color .15s,box-shadow .15s}
+.rt-item:hover{border-color:var(--primary)}
+.rt-item.sel{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.rt-item .n{font-size:14px;font-weight:500;color:var(--primary)}
+.rt-item .s{font-size:12px;color:var(--mediumGrey);display:flex;align-items:center;gap:6px}
+.rt-item .dot{width:7px;height:7px;border-radius:50%;background:#C8C8C8}
+.rt-item.done .dot{background:var(--successColor)}
+.rt-item.done .s{color:var(--successColor)}
+.rt-item.edit .dot{background:#F39406}
+.rt-item.edit .s{color:#C77700}
+.rt-select{margin-left:10px}
+.rt-select .trigger{min-width:260px}
+.rt-select .menu{left:0;right:auto;min-width:320px;max-height:320px;overflow:auto}
+.rt-select .opt{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.rt-select .opt .s,.rt-status{font-size:12px;color:var(--mediumGrey);display:inline-flex;align-items:center;gap:6px;font-weight:400}
+.rt-select .dot,.rt-status .dot{width:7px;height:7px;border-radius:50%;background:#C8C8C8}
+.st-done .dot{background:var(--successColor)}.st-done{color:var(--successColor)!important}
+.st-edit .dot{background:#F39406}.st-edit{color:#C77700!important}
+.rt-note{margin-top:4px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--deepGrey)}
+.rt-note b{color:var(--primary);font-weight:500}
+.rt-note .nav{margin-left:auto;display:flex;gap:10px;align-items:center}
+.rt-note .counter{font-size:12.5px;color:var(--mediumGrey)}
+.rt-flash{animation:flash .7s ease}
+@keyframes flash{0%{background:rgba(245,75,30,.08)}100%{background:transparent}}
+
+/* ---------- Toast & modal ---------- */
+.toast-wrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:#fff;padding:9px 14px;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.08),0 3px 6px -4px rgba(0,0,0,.12),0 9px 28px 8px rgba(0,0,0,.05);font-size:14px;display:flex;gap:8px;align-items:center;animation:tin .2s ease}
+.toast svg{width:16px;height:16px}
+.toast.ok svg{color:#52C41A}.toast.warn svg{color:#FAAD14}.toast.info svg{color:#1677FF}
+@keyframes tin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:90}
+.mask.show{display:flex}
+.modal{background:#fff;border-radius:8px;width:440px;max-width:92vw;padding:22px 24px 18px;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.modal h4{margin:0 0 8px;font-size:16px;font-weight:500;display:flex;gap:10px;align-items:center}
+.modal h4 svg{width:20px;height:20px;color:#FAAD14}
+.modal p{margin:0 0 18px 30px;font-size:14px;color:var(--deepGrey);line-height:1.5}
+.modal ul{margin:-8px 0 18px 30px;padding-left:18px;font-size:13.5px;color:var(--deepGrey);line-height:1.6}
+.modal .b{display:flex;justify-content:flex-end;gap:10px}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="hdr">
+  <button class="icon-btn" title="Menu"><svg aria-hidden="true" data-icon="menu" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M904 160H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0 624H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0-312H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8z"></path></svg></button>
+  <div class="prop" title="Change property">
+    <div><div class="nm">Hotel YCS</div><div class="id">56814</div></div>
+    <span class="chev"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"/></svg></span>
+  </div>
+  <div class="search">
+    <svg viewBox="64 64 896 896" width="14" height="14" fill="#1E1928"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"/></svg>
+    <input placeholder="Search reservations, guests and more" type="text">
+    <span title="Search by reservation no., guest name, email or phone"><svg width="14" height="14" viewBox="64 64 896 896" fill="#8C8282"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span>
+  </div>
+  <div class="hdr-right">
+    <button class="icon-btn" title="New reservation"><svg fill="none" height="1em" viewBox="0 0 20 20" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16.3929 2.4107h-3.375V1.125a.1612.1612 0 00-.1607-.1607h-1.125a.1612.1612 0 00-.1607.1607v1.2857H6.4286V1.125A.1612.1612 0 006.268.9643H5.143a.1612.1612 0 00-.1607.1607v1.2857h-3.375a.6422.6422 0 00-.6428.6429v13.3392c0 .3556.2872.6429.6428.6429H16.393a.6422.6422 0 00.6429-.6429V3.0535a.6422.6422 0 00-.6429-.6428zm-.8035 13.1786H2.4108v-7.634h13.1786v7.634zm-13.1786-9V3.857h2.5714v.9643c0 .0884.0723.1607.1607.1607h1.125a.1612.1612 0 00.1607-.1607v-.9643h5.1429v.9643c0 .0884.0723.1607.1607.1607h1.125a.1612.1612 0 00.1607-.1607v-.9643h2.5715v2.7322H2.4108z" fill="currentColor"></path><path d="M14.5 20c3.0376 0 5.5-2.4624 5.5-5.5S17.5376 9 14.5 9 9 11.4624 9 14.5s2.4624 5.5 5.5 5.5z" fill="var(--primary)"></path><path d="M14 17v-2h-2v-1h2v-2h1v2h2v1h-2v2h-1z" fill="#fff"></path></svg></button>
+    <button class="icon-btn" title="Schedule"><svg aria-hidden="true" data-icon="schedule" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M928 224H768v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H548v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H328v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H96c-17.7 0-32 14.3-32 32v576c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V256c0-17.7-14.3-32-32-32zm-40 568H136V296h120v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56h148v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56h148v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56h120v496zM416 496H232c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm0 136H232c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm308.2-177.4L620.6 598.3l-52.8-73.1c-3-4.2-7.8-6.6-12.9-6.6H500c-6.5 0-10.3 7.4-6.5 12.7l114.1 158.2a15.9 15.9 0 0025.8 0l165-228.7c3.8-5.3 0-12.7-6.5-12.7H737c-5-.1-9.8 2.4-12.8 6.5z"></path></svg></button>
+    <button class="icon-btn" title="Calendar"><svg aria-hidden="true" data-icon="calendar" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></button>
+    <button class="icon-btn" title="Rates"><svg aria-hidden="true" data-icon="dollar" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372zm47.7-395.2l-25.4-5.9V348.6c38 5.2 61.5 29 65.5 58.2.5 4 3.9 6.9 7.9 6.9h44.9c4.7 0 8.4-4.1 8-8.8-6.1-62.3-57.4-102.3-125.9-109.2V263c0-4.4-3.6-8-8-8h-28.1c-4.4 0-8 3.6-8 8v33c-70.8 6.9-126.2 46-126.2 119 0 67.6 49.8 100.2 102.1 112.7l24.7 6.3v142.7c-44.2-5.9-69-29.5-74.1-61.3-.6-3.8-4-6.6-7.9-6.6H363c-4.7 0-8.4 4-8 8.7 4.5 55 46.2 105.6 135.2 112.1V761c0 4.4 3.6 8 8 8h28.4c4.4 0 8-3.6 8-8.1l-.2-31.7c78.3-6.9 134.3-48.8 134.3-124-.1-69.4-44.2-100.4-109-116.4zm-68.6-16.2c-5.6-1.6-10.3-3.1-15-5-33.8-12.2-49.5-31.9-49.5-57.3 0-36.3 27.5-57 64.5-61.7v124zM534.3 677V543.3c3.1.9 5.9 1.6 8.8 2.2 47.3 14.4 63.2 34.4 63.2 65.1 0 39.1-29.4 62.6-72 66.4z"></path></svg></button>
+    <button class="icon-btn" title="Apps"><svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path></svg></button>
+    <span class="sep"></span>
+    <button class="icon-btn" title="Notifications"><svg aria-hidden="true" data-icon="bell" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M816 768h-24V428c0-141.1-104.3-257.7-240-277.1V112c0-22.1-17.9-40-40-40s-40 17.9-40 40v38.9c-135.7 19.4-240 136-240 277.1v340h-24c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h216c0 61.8 50.2 112 112 112s112-50.2 112-112h216c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM512 888c-26.5 0-48-21.5-48-48h96c0 26.5-21.5 48-48 48zM304 768V428c0-55.6 21.6-107.8 60.9-147.1S456.4 220 512 220c55.6 0 107.8 21.6 147.1 60.9S720 372.4 720 428v340H304z"></path></svg><span class="badge">3</span></button>
+    <button class="icon-btn circle-bg" title="Announcements"><svg aria-hidden="true" data-icon="notification" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M880 112c-3.8 0-7.7.7-11.6 2.3L292 345.9H128c-8.8 0-16 7.4-16 16.6v299c0 9.2 7.2 16.6 16 16.6h101.6c-3.7 11.6-5.6 23.9-5.6 36.4 0 65.9 53.8 119.5 120 119.5 55.4 0 102.1-37.6 115.9-88.4l408.6 164.2c3.9 1.5 7.8 2.3 11.6 2.3 16.9 0 32-14.2 32-33.2V145.2C912 126.2 897 112 880 112zM344 762.3c-26.5 0-48-21.4-48-47.8 0-11.2 3.9-21.9 11-30.4l84.9 34.1c-2 24.6-22.7 44.1-47.9 44.1z"></path></svg><span class="badge">9+</span></button>
+    <span class="sep"></span>
+    <button class="icon-btn" style="width:auto;padding:0 6px;border-radius:4px;gap:6px" title="Account"><svg aria-hidden="true" data-icon="user" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M858.5 763.6a374 374 0 00-80.6-119.5 375.63 375.63 0 00-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 00-80.6 119.5A371.7 371.7 0 00136 901.8a8 8 0 008 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 008-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z"></path></svg><span style="font-size:10px">▼</span></button>
+  </div>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<nav class="side">
+  <div class="it"><svg aria-hidden="true" data-icon="dashboard" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M924.8 385.6a446.7 446.7 0 00-96-142.4 446.7 446.7 0 00-142.4-96C631.1 123.8 572.5 112 512 112s-119.1 11.8-174.4 35.2a446.7 446.7 0 00-142.4 96 446.7 446.7 0 00-96 142.4C75.8 440.9 64 499.5 64 560c0 132.7 58.3 257.7 159.9 343.1l1.7 1.4c5.8 4.8 13.1 7.5 20.6 7.5h531.7c7.5 0 14.8-2.7 20.6-7.5l1.7-1.4C901.7 817.7 960 692.7 960 560c0-60.5-11.9-119.1-35.2-174.4zM761.4 836H262.6A371.12 371.12 0 01140 560c0-99.4 38.7-192.8 109-263 70.3-70.3 163.7-109 263-109 99.4 0 192.8 38.7 263 109 70.3 70.3 109 163.7 109 263 0 105.6-44.5 205.5-122.6 276zM623.5 421.5a8.03 8.03 0 00-11.3 0L527.7 506c-18.7-5-39.4-.2-54.1 14.5a55.95 55.95 0 000 79.2 55.95 55.95 0 0079.2 0 55.87 55.87 0 0014.5-54.1l84.5-84.5c3.1-3.1 3.1-8.2 0-11.3l-28.3-28.3zM490 320h44c4.4 0 8-3.6 8-8v-80c0-4.4-3.6-8-8-8h-44c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8zm260 218v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8zm12.7-197.2l-31.1-31.1a8.03 8.03 0 00-11.3 0l-56.6 56.6a8.03 8.03 0 000 11.3l31.1 31.1c3.1 3.1 8.2 3.1 11.3 0l56.6-56.6c3.1-3.1 3.1-8.2 0-11.3zm-458.6-31.1a8.03 8.03 0 00-11.3 0l-31.1 31.1a8.03 8.03 0 000 11.3l56.6 56.6c3.1 3.1 8.2 3.1 11.3 0l31.1-31.1c3.1-3.1 3.1-8.2 0-11.3l-56.6-56.6zM262 530h-80c-4.4 0-8 3.6-8 8v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8z"></path></svg><span class="tip">Dashboard</span></div><div class="it sel"><svg aria-hidden="true" data-icon="calculator" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M251.2 387H320v68.8c0 1.8 1.8 3.2 4 3.2h48c2.2 0 4-1.4 4-3.3V387h68.8c1.8 0 3.2-1.8 3.2-4v-48c0-2.2-1.4-4-3.3-4H376v-68.8c0-1.8-1.8-3.2-4-3.2h-48c-2.2 0-4 1.4-4 3.2V331h-68.8c-1.8 0-3.2 1.8-3.2 4v48c0 2.2 1.4 4 3.2 4zm328 0h193.6c1.8 0 3.2-1.8 3.2-4v-48c0-2.2-1.4-4-3.3-4H579.2c-1.8 0-3.2 1.8-3.2 4v48c0 2.2 1.4 4 3.2 4zm0 265h193.6c1.8 0 3.2-1.8 3.2-4v-48c0-2.2-1.4-4-3.3-4H579.2c-1.8 0-3.2 1.8-3.2 4v48c0 2.2 1.4 4 3.2 4zm0 104h193.6c1.8 0 3.2-1.8 3.2-4v-48c0-2.2-1.4-4-3.3-4H579.2c-1.8 0-3.2 1.8-3.2 4v48c0 2.2 1.4 4 3.2 4zm-195.7-81l61.2-74.9c4.3-5.2.7-13.1-5.9-13.1H388c-2.3 0-4.5 1-5.9 2.9l-34 41.6-34-41.6a7.85 7.85 0 00-5.9-2.9h-50.9c-6.6 0-10.2 7.9-5.9 13.1l61.2 74.9-62.7 76.8c-4.4 5.2-.8 13.1 5.8 13.1h50.8c2.3 0 4.5-1 5.9-2.9l35.5-43.5 35.5 43.5c1.5 1.8 3.7 2.9 5.9 2.9h50.8c6.6 0 10.2-7.9 5.9-13.1L383.5 675zM880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-36 732H180V180h664v664z"></path></svg><span class="tip">Rules Configuration</span></div><div class="it"><svg aria-hidden="true" data-icon="audit" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M296 250c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h384c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H296zm184 144H296c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm-48 458H208V148h560v320c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V108c0-17.7-14.3-32-32-32H168c-17.7 0-32 14.3-32 32v784c0 17.7 14.3 32 32 32h264c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm440-88H728v-36.6c46.3-13.8 80-56.6 80-107.4 0-61.9-50.1-112-112-112s-112 50.1-112 112c0 50.7 33.7 93.6 80 107.4V764H520c-8.8 0-16 7.2-16 16v152c0 8.8 7.2 16 16 16h352c8.8 0 16-7.2 16-16V780c0-8.8-7.2-16-16-16zM646 620c0-27.6 22.4-50 50-50s50 22.4 50 50-22.4 50-50 50-50-22.4-50-50zm180 266H566v-60h260v60z"></path></svg><span class="tip">Rules Audit Trail</span></div><div class="it"><svg aria-hidden="true" data-icon="stock" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M904 747H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM165.7 621.8l39.7 39.5c3.1 3.1 8.2 3.1 11.3 0l234.7-233.9 97.6 97.3a32.11 32.11 0 0045.2 0l264.2-263.2c3.1-3.1 3.1-8.2 0-11.3l-39.7-39.6a8.03 8.03 0 00-11.3 0l-235.7 235-97.7-97.3a32.11 32.11 0 00-45.2 0L165.7 610.5a7.94 7.94 0 000 11.3z"></path></svg><span class="tip">Rules Analysis</span></div><div class="it"><svg aria-hidden="true" data-icon="schedule" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M928 224H768v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H548v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H328v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56H96c-17.7 0-32 14.3-32 32v576c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V256c0-17.7-14.3-32-32-32zm-40 568H136V296h120v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56h148v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56h148v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56h120v496zM416 496H232c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm0 136H232c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm308.2-177.4L620.6 598.3l-52.8-73.1c-3-4.2-7.8-6.6-12.9-6.6H500c-6.5 0-10.3 7.4-6.5 12.7l114.1 158.2a15.9 15.9 0 0025.8 0l165-228.7c3.8-5.3 0-12.7-6.5-12.7H737c-5-.1-9.8 2.4-12.8 6.5z"></path></svg><span class="tip">Trigger Audit Trail</span></div><div class="it"><svg aria-hidden="true" data-icon="fund-projection-screen" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M312.1 591.5c3.1 3.1 8.2 3.1 11.3 0l101.8-101.8 86.1 86.2c3.1 3.1 8.2 3.1 11.3 0l226.3-226.5c3.1-3.1 3.1-8.2 0-11.3l-36.8-36.8a8.03 8.03 0 00-11.3 0L517 485.3l-86.1-86.2a8.03 8.03 0 00-11.3 0L275.3 543.4a8.03 8.03 0 000 11.3l36.8 36.8z"></path><path d="M904 160H548V96c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H120c-17.7 0-32 14.3-32 32v520c0 17.7 14.3 32 32 32h356.4v32L311.6 884.1a7.92 7.92 0 00-2.3 11l30.3 47.2v.1c2.4 3.7 7.4 4.7 11.1 2.3L512 838.9l161.3 105.8c3.7 2.4 8.7 1.4 11.1-2.3v-.1l30.3-47.2a8 8 0 00-2.3-11L548 776.3V744h356c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-40 512H160V232h704v440z"></path></svg><span class="tip">Competition Rates Tracker (CRT)</span></div><div class="it"><svg aria-hidden="true" data-icon="file-text" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0042 42h216v494zM504 618H320c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zM312 490v48c0 4.4 3.6 8 8 8h384c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H320c-4.4 0-8 3.6-8 8z"></path></svg><span class="tip">Reports</span></div><div class="it"><svg aria-hidden="true" data-icon="reconciliation" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M676 565c-50.8 0-92 41.2-92 92s41.2 92 92 92 92-41.2 92-92-41.2-92-92-92zm0 126c-18.8 0-34-15.2-34-34s15.2-34 34-34 34 15.2 34 34-15.2 34-34 34zm204-523H668c0-30.9-25.1-56-56-56h-80c-30.9 0-56 25.1-56 56H264c-17.7 0-32 14.3-32 32v200h-88c-17.7 0-32 14.3-32 32v448c0 17.7 14.3 32 32 32h336c17.7 0 32-14.3 32-32v-16h368c17.7 0 32-14.3 32-32V200c0-17.7-14.3-32-32-32zm-412 64h72v-56h64v56h72v48H468v-48zm-20 616H176V616h272v232zm0-296H176v-88h272v88zm392 240H512V432c0-17.7-14.3-32-32-32H304V240h100v104h336V240h100v552zM704 408v96c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-96c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8zM592 512h48c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8z"></path></svg><span class="tip">Budget</span></div><div class="it"><svg aria-hidden="true" data-icon="setting" fill="currentColor" focusable="false" height="1em" viewBox="64 64 896 896" width="1em"><path d="M924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 009.3-35.2l-.9-2.6a443.74 443.74 0 00-79.7-137.9l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52.1-9.4-106.9-9.4-159 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.4a351.86 351.86 0 00-99 57.4l-81.9-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a446.02 446.02 0 00-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1 0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0025.8 25.7l2.7.5a449.4 449.4 0 00159 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-85a350 350 0 0099.7-57.6l81.3 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35zM788.3 465.9c2.5 15.1 3.8 30.6 3.8 46.1s-1.3 31-3.8 46.1l-6.6 40.1 74.7 63.9a370.03 370.03 0 01-42.6 73.6L721 702.8l-31.4 25.8c-23.9 19.6-50.5 35-79.3 45.8l-38.1 14.3-17.9 97a377.5 377.5 0 01-85 0l-17.9-97.2-37.8-14.5c-28.5-10.8-55-26.2-78.7-45.7l-31.4-25.9-93.4 33.2c-17-22.9-31.2-47.6-42.6-73.6l75.5-64.5-6.5-40c-2.4-14.9-3.7-30.3-3.7-45.5 0-15.3 1.2-30.6 3.7-45.5l6.5-40-75.5-64.5c11.3-26.1 25.6-50.7 42.6-73.6l93.4 33.2 31.4-25.9c23.7-19.5 50.2-34.9 78.7-45.7l37.9-14.3 17.9-97.2c28.1-3.2 56.8-3.2 85 0l17.9 97 38.1 14.3c28.7 10.8 55.4 26.2 79.3 45.8l31.4 25.8 92.8-32.9c17 22.9 31.2 47.6 42.6 73.6L781.8 426l6.5 39.9zM512 326c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm79.2 255.2A111.6 111.6 0 01512 614c-29.9 0-58-11.7-79.2-32.8A111.6 111.6 0 01400 502c0-29.9 11.7-58 32.8-79.2C454 401.6 482.1 390 512 390c29.9 0 58 11.6 79.2 32.8A111.6 111.6 0 01624 502c0 29.9-11.7 58-32.8 79.2z"></path></svg><span class="tip">Settings</span></div>
+  <div class="expand" title="Expand menu"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"/></svg></div>
+</nav>
+
+<!-- ================= CONTENT ================= -->
+<div class="content">
+ <div class="card">
+  <div class="topbar">
+    <span class="lbl">Apply Dynamic Pricing</span>
+    <button class="sw lg on" id="swDynamic" aria-label="Apply Dynamic Pricing"></button>
+    <div class="right">
+      <span class="small">Hide disabled rules</span>
+      <button class="sw lg" id="swHide" aria-label="Hide disabled rules"></button>
+      <span class="small" style="margin-left:18px">Occupancy Based On</span>
+      <div class="aselect" id="occBased">
+        <div class="trigger" tabindex="0"><span class="val">Property</span><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"/></svg></div>
+        <div class="menu">
+          <div class="opt sel" data-v="property">Property</div>
+          <div class="opt" data-v="roomtype">Room Type</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll" id="scroll">
+
+   <!-- Month Wise -->
+   <section class="rule" data-rule="month">
+    <div class="rule-head"><h3>Month Wise Rule</h3><span class="info" data-tip="Adjusts the base rate for each month: (Rate + Add/Sub) × Scale + Add/Sub"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span><button class="sw lg on rule-sw"></button></div>
+    <table class="grid" style="margin-left:0">
+      <thead><tr><th style="width:110px;padding-left:16px">Month</th><th style="width:190px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate before scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th class="x">X</th><th style="width:120px"><span class="th">Scale <span class="info" data-tip="Multiplier applied to the rate"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:200px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate after scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th></tr></thead>
+      <tbody id="monthBody"></tbody>
+    </table>
+   </section>
+
+   <!-- Weekday -->
+   <section class="rule" data-rule="weekday">
+    <div class="rule-head"><h3>WeekDay/WeekEnd Rule</h3><span class="info" data-tip="Scale applied to the rate based on the day of the week"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span><button class="sw lg rule-sw"></button></div>
+    <table class="grid wk">
+      <thead><tr><th style="padding-left:16px">Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr></thead>
+      <tbody><tr id="wkRow"></tr></tbody>
+    </table>
+   </section>
+
+   <!-- Season -->
+   <section class="rule" data-rule="season">
+    <div class="rule-head"><h3>Season Rule</h3><span class="info" data-tip="Adjusts the rate for a specific date range and selected weekdays"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span><button class="sw lg on rule-sw"></button></div>
+    <table class="grid" style="width:100%">
+      <thead><tr><th style="width:240px;padding-left:16px">Duration</th><th style="width:150px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate before scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th class="x">X</th><th style="width:100px"><span class="th">Scale <span class="info" data-tip="Multiplier applied to the rate"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:170px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate after scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:340px">Weekdays Applicable</th><th>Title</th><th style="width:80px"></th></tr></thead>
+      <tbody id="seasonBody"></tbody>
+    </table>
+   </section>
+
+   <!-- ============ NEW: Room type selection bar ============ -->
+   <section class="rtbar" id="rtbar">
+    <div class="row1">
+      <h3>Room Type</h3>
+      <span class="info" data-tip="Occupancy, Last Minute and Lead Time rules are configured separately for each room type. Select a room type to configure its rules."><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span>
+      <div class="aselect rt-select" id="rtSelect">
+        <div class="trigger" tabindex="0"><span class="val">Deluxe Room</span><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"/></svg></div>
+        <div class="menu" id="rtList"></div>
+      </div>
+      <span class="rt-status" id="rtStatus"></span>
+    </div>
+    <div class="rt-note">
+      <span>Occupancy Rule, Last Minute Rule and Lead Time Rule below are configured for <b id="rtName">Deluxe Room</b>.<span id="rtHint" style="color:var(--mediumGrey)"></span></span>
+      <div class="nav">
+        <span class="counter" id="rtCounter">1 of 5</span>
+        <button class="btn sm" id="rtPrev">Previous</button>
+        <button class="btn sm primary" id="rtNext">Next Room Type</button>
+      </div>
+    </div>
+   </section>
+
+   <!-- Occupancy -->
+   <section class="rule rt-scope" data-rule="occ">
+    <div class="rule-head"><h3>Occupancy Rule</h3><span class="info" data-tip="Adjusts the rate based on current occupancy percentage"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span><button class="sw lg rule-sw" data-key="occ"></button><span class="rt-tag"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg><span class="rt-tag-name">Deluxe Room</span></span></div>
+    <table class="grid">
+      <thead><tr><th style="width:110px;padding-left:16px">Start</th><th style="width:118px">End</th><th style="width:150px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate before scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th class="x">X</th><th style="width:90px"><span class="th">Scale <span class="info" data-tip="Multiplier applied to the rate"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:150px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate after scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:90px"></th></tr></thead>
+      <tbody id="occBody"></tbody>
+    </table>
+   </section>
+
+   <!-- Last Minute -->
+   <section class="rule rt-scope" data-rule="lm">
+    <div class="rule-head"><h3>Last Minute Rule</h3><span class="info" data-tip="Adjusts the rate after a trigger time when occupancy is within the given range"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span><button class="sw lg rule-sw" data-key="lm"></button><span class="rt-tag"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg><span class="rt-tag-name">Deluxe Room</span></span></div>
+    <table class="grid" style="width:100%">
+      <thead><tr><th style="width:160px;padding-left:16px"><span class="th">Trigger (HH:MM) <span class="info" data-tip="Time of day after which the rule applies"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:160px"><span class="th">Apply For <span class="info" data-tip="Stay date the rule applies to"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:176px">Occ&gt;=</th><th style="width:176px">Occ&lt;</th><th style="width:190px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate before scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th class="x">X</th><th style="width:120px"><span class="th">Scale <span class="info" data-tip="Multiplier applied to the rate"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th style="width:190px"><span class="th">Add/Sub <span class="info" data-tip="Amount added to or subtracted from the rate after scaling"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span></span></th><th></th></tr></thead>
+      <tbody id="lmBody"></tbody>
+    </table>
+   </section>
+
+   <!-- Lead Time -->
+   <section class="rule rt-scope" data-rule="lt" style="border-bottom:0;padding-bottom:26px">
+    <div class="rule-head"><h3>Lead Time Rule</h3><span class="info" data-tip="Scale applied based on how many days before arrival the booking is made"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span><button class="sw lg rule-sw" data-key="lt"></button><span class="rt-tag"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg><span class="rt-tag-name">Deluxe Room</span></span></div>
+    <div class="lt-top">
+      <span class="l">Window Size</span><input class="in" id="ltWindow" style="width:74px" type="number" min="1" max="90">
+      <span class="gap"></span>
+      <label>From Day</label><input class="in" id="ltFD" style="width:74px">
+      <label>To Day</label><input class="in" id="ltTD" style="width:74px">
+      <label>From Factor</label><input class="in" id="ltFF" style="width:74px">
+      <label>To Factor</label><input class="in" id="ltTF" style="width:74px">
+      <button class="btn" id="ltFill" style="width:96px">Fill</button>
+      <span class="info" data-tip="Fill a day range with factors that change evenly from the From Factor to the To Factor"><svg viewBox="64 64 896 896" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg></span>
+    </div>
+    <div class="lt-grid" id="ltGrid"></div>
+   </section>
+  </div>
+
+  <div class="footer">
+    <button class="btn outline" id="btnPreview">Preview Calendar</button>
+    <button class="btn" id="btnCancel">Cancel</button>
+    <button class="btn primary" id="btnSave">Save</button>
+  </div>
+ </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+
+<script>
+/* ======================= ICONS ======================= */
+const IC={
+  minus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#BFBFBF" stroke-width="1.8"><path d="M4 12h15M14 7l5 5-5 5"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M5 12l5 5 9-10"/></svg>',
+  ok:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11"/><path d="M7 12l3.5 3.5L17 9" stroke="#fff" stroke-width="2.2" fill="none"/></svg>',
+  warn:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11"/><path d="M12 6.5v7M12 16.5v.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>',
+  infoF:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11"/><path d="M12 10.5v7M12 7v.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>'
+};
+
+/* ======================= HELPERS ======================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const f4=v=>(v===''||v==null||isNaN(+v))?'':(+v).toFixed(4);
+const f2=v=>(v===''||v==null||isNaN(+v))?'':(+v).toFixed(2);
+const clone=o=>JSON.parse(JSON.stringify(o));
+function toast(msg,type='ok'){const t=document.createElement('div');t.className='toast '+type;t.innerHTML=(type==='ok'?IC.ok:type==='warn'?IC.warn:IC.infoF)+'<span>'+msg+'</span>';$('#toasts').appendChild(t);setTimeout(()=>t.remove(),2800);}
+function modal(html){$('#modal').innerHTML=html;$('#mask').classList.add('show');}
+function closeModal(){$('#mask').classList.remove('show');}
+$('#mask').addEventListener('click',e=>{if(e.target.id==='mask')closeModal();});
+function addGroup(val,dis,ph='Add/Sub',w='w-add'){return `<span class="grp"><button class="add" ${dis?'disabled':''} title="Toggle + / −">+/-</button><input class="in ${w}" placeholder="${ph}" value="${val}" ${dis?'disabled':''}></span>`;}
+function pctGroup(val,dis,ph=''){return `<span class="grp"><input class="in pre w-pct" placeholder="${ph}" value="${val}" ${dis?'disabled':''}><span class="suf">%</span></span>`;}
+
+/* ======================= STATIC (PROPERTY) RULES ======================= */
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const monthData=[[30,1,30],[23,1,24],[56,1,89],[78,1,67],[67,1,7],[78,3,78],['',1,''],['',1,''],['',1,''],['',1,''],['',1,''],['',1,'']];
+const weekData=[0.95,0.9,1,1.02,1.15,1.25,1.1];
+let seasonRows=[{from:'22/12/2026',to:'06/01/2027',a1:'',sc:2,a2:'',all:true,days:[1,1,1,1,1,1,1],title:'Xmas_new Year'}];
+
+function renderMonth(){ $('#monthBody').innerHTML=months.map((m,i)=>`<tr><td style="padding-left:16px">${m}</td><td>${addGroup(f4(monthData[i][0]),false,'Add/Sub','w-add')}</td><td class="x">X</td><td><input class="in w-scale" value="${f4(monthData[i][1])}"></td><td>${addGroup(f4(monthData[i][2]),false)}</td></tr>`).join(''); }
+function renderWeek(){ $('#wkRow').innerHTML=weekData.map((v,i)=>`<td ${i===0?'style="padding-left:16px"':''}><input class="in" value="${f4(v)}"></td>`).join(''); }
+function renderSeason(){
+  const L=['S','M','T','W','T','F','S'];
+  $('#seasonBody').innerHTML=seasonRows.map((r,i)=>`<tr data-i="${i}"><td style="padding-left:16px"><span class="datebox"><input value="${r.from}" placeholder="Start date">${IC.arrow}<input value="${r.to}" placeholder="End date">${IC.cal}</span></td>
+   <td>${addGroup(r.a1,false,'Add/Sub','w-add')}</td><td class="x">X</td><td><input class="in w-scale" value="${f4(r.sc)}"></td><td>${addGroup(r.a2,false)}</td>
+   <td><span class="days"><button class="chk ${r.all?'on':''}" data-all title="All days">${IC.check}</button>${L.map((d,j)=>`<button class="day ${r.days[j]?'':'off'}" data-d="${j}">${d}</button>`).join('')}</span></td>
+   <td><input class="in" style="width:150px" value="${r.title}" placeholder="Title"></td>
+   <td><span class="act"><button class="rm" title="Remove">${IC.minus}</button>${i===seasonRows.length-1?`<button class="ad" title="Add season">${IC.plus}</button>`:''}</span></td></tr>`).join('');
+  applyEnabled($('[data-rule=season]'));
+}
+function readSeason(){ seasonRows=$$('#seasonBody tr').map(tr=>{const ins=tr.querySelectorAll('input');return {from:ins[0].value,to:ins[1].value,a1:ins[2].value,sc:ins[3].value,a2:ins[4].value,title:ins[5].value,all:tr.querySelector('[data-all]').classList.contains('on'),days:[...tr.querySelectorAll('.day')].map(b=>b.classList.contains('off')?0:1)};}); }
+$('#seasonBody').addEventListener('click',e=>{
+  const tr=e.target.closest('tr'); if(!tr)return;
+  if(e.target.closest('.day')){const b=e.target.closest('.day');b.classList.toggle('off');const all=[...tr.querySelectorAll('.day')].every(x=>!x.classList.contains('off'));tr.querySelector('[data-all]').classList.toggle('on',all);return;}
+  if(e.target.closest('[data-all]')){const c=e.target.closest('[data-all]');c.classList.toggle('on');tr.querySelectorAll('.day').forEach(d=>d.classList.toggle('off',!c.classList.contains('on')));return;}
+  if(e.target.closest('.rm')){readSeason();if(seasonRows.length===1){toast('At least one season row is required','warn');return;}seasonRows.splice(+tr.dataset.i,1);renderSeason();return;}
+  if(e.target.closest('.ad')){readSeason();seasonRows.push({from:'',to:'',a1:'',sc:1,a2:'',all:true,days:[1,1,1,1,1,1,1],title:''});renderSeason();}
+});
+
+/* ======================= ROOM-TYPE-SCOPED RULES ======================= */
+const baseOcc=[[0,6,1.02],[6.01,13,1.04],[13.01,20,1.06],[20.01,27,1.08],[27.01,33,1.10],[33.01,40,1.12],[40.01,47,1.14],[47.01,53,1.16],[53.01,60,1.18],[60.01,67,1.20],[67.01,73,1.22],[73.01,80,1.24],[80.01,87,1.26],[87.01,93,1.28],[93.01,100,1.30]];
+function ltLinear(n,a,b){const r=[];for(let i=0;i<n;i++)r.push(n===1?a:a+(b-a)*i/(n-1));return r;}
+function makeSet(o){return {
+  occ:{on:o.occOn, rows:baseOcc.map(([s,e,sc])=>({s,e,a1:'',sc:+(1+(sc-1)*o.occK).toFixed(4),a2:''}))},
+  lm:{on:o.lmOn, rows:o.lm.map(([t,ap,g,l,a1])=>({t,ap,g,l,a1,sc:'',a2:''}))},
+  lt:{on:o.ltOn, win:30, vals:(o.lt[0]===1.15&&o.lt[1]===0.8501)?[1.15,1.1397,1.1293,1.119,1.1086,1.0983,1.088,1.0776,1.0673,1.0569,1.0466,1.0363,1.0259,1.0156,1.0052,0.9949,0.9846,0.9742,0.9639,0.9535,0.9432,0.9329,0.9225,0.9122,0.9018,0.8915,0.8812,0.8708,0.8605,0.8501].slice():ltLinear(30,o.lt[0],o.lt[1])}
+};}
+const PROPERTY_SET=makeSet({occOn:true,occK:1,lmOn:false,lm:[['03:00 PM','Today',0,50,-500],['05:00 PM','Today',0,30,-700],['08:00 PM','Today',0,10,-1000]],ltOn:false,lt:[1.15,0.8501]});
+const ROOMS=[
+ {id:'dlx',name:'Deluxe Room',status:'done',set:makeSet({occOn:true,occK:1,lmOn:true,lm:[['03:00 PM','Today',0,50,-500],['05:00 PM','Today',0,30,-700],['08:00 PM','Today',0,10,-1000]],ltOn:false,lt:[1.15,0.8501]})},
+ {id:'sdx',name:'Super Deluxe Room',status:'done',set:makeSet({occOn:true,occK:1.5,lmOn:true,lm:[['04:00 PM','Today',0,40,-800],['07:00 PM','Today',0,20,-1200]],ltOn:true,lt:[1.20,0.90]})},
+ {id:'exs',name:'Executive Suite',status:'none',set:makeSet({occOn:true,occK:2,lmOn:false,lm:[['06:00 PM','Today',0,30,-1500]],ltOn:true,lt:[1.25,0.95]})},
+ {id:'fam',name:'Family Room',status:'none',set:makeSet({occOn:true,occK:1,lmOn:false,lm:[['03:00 PM','Today',0,50,-500]],ltOn:false,lt:[1.15,0.8501]})},
+ {id:'vil',name:'Premium Pool Villa',status:'none',set:makeSet({occOn:true,occK:2.5,lmOn:false,lm:[['08:00 PM','Today',0,20,-2500]],ltOn:true,lt:[1.30,1.00]})}
+];
+const INITIAL={prop:clone(PROPERTY_SET),rooms:clone(ROOMS)};
+
+let MODE='property';      // 'property' | 'roomtype'
+let CUR=0;                // current room index
+let propSet=clone(PROPERTY_SET);
+let rooms=clone(ROOMS);
+let loading=false;
+const activeSet=()=>MODE==='property'?propSet:rooms[CUR].set;
+
+function renderOcc(d){
+  const dis=!d.on;
+  $('#occBody').innerHTML=d.rows.map((r,i)=>`<tr data-i="${i}"><td style="padding-left:16px">${pctGroup(r.s,dis)}</td><td>${pctGroup(r.e,dis)}</td><td>${addGroup(r.a1,dis,'Add/Sub','w-add')}</td><td class="x">X</td><td><input class="in" style="width:62px" value="${f4(r.sc)}" placeholder="Scale" ${dis?'disabled':''}></td><td>${addGroup(r.a2,dis,'Add/Sub','w-add')}</td>
+   <td><span class="act"><button class="rm" title="Remove" ${dis?'disabled':''}>${IC.minus}</button>${i===d.rows.length-1?`<button class="ad" title="Add row" ${dis?'disabled':''}>${IC.plus}</button>`:''}</span></td></tr>`).join('');
+}
+function renderLM(d){
+  const dis=!d.on, ap=['Today','Tomorrow','Today & Tomorrow'];
+  $('#lmBody').innerHTML=d.rows.map((r,i)=>`<tr data-i="${i}"><td style="padding-left:16px"><span class="timebox"><input class="in" value="${r.t}" placeholder="HH:MM" ${dis?'disabled':''}>${IC.clock}</span></td>
+   <td><select class="in sel-native" style="width:118px" ${dis?'disabled':''}>${ap.map(a=>`<option ${a===r.ap?'selected':''}>${a}</option>`).join('')}</select></td>
+   <td><span class="grp"><input class="in pre" style="width:112px" value="${f2(r.g)}" ${dis?'disabled':''}><span class="suf">%</span></span></td>
+   <td><span class="grp"><input class="in pre" style="width:112px" value="${f2(r.l)}" ${dis?'disabled':''}><span class="suf">%</span></span></td>
+   <td>${addGroup(f4(r.a1),dis,'Add/Sub','w-add')}</td><td class="x">X</td>
+   <td><input class="in" style="width:92px" value="${f4(r.sc)}" placeholder="Scale" ${dis?'disabled':''}></td>
+   <td>${addGroup(f4(r.a2),dis,'Add/Sub','w-add')}</td>
+   <td><span class="act"><button class="rm" title="Remove" ${dis?'disabled':''}>${IC.minus}</button>${i===d.rows.length-1?`<button class="ad" title="Add row" ${dis?'disabled':''}>${IC.plus}</button>`:''}</span></td></tr>`).join('');
+}
+function renderLT(d){
+  const dis=!d.on;
+  $('#ltWindow').value=d.win;
+  ['#ltWindow','#ltFD','#ltTD','#ltFF','#ltTF'].forEach(s=>$(s).disabled=dis);
+  $('#ltFill').disabled=dis;
+  $('#ltGrid').innerHTML=d.vals.map((v,i)=>`<div class="lt-cell"><div class="dl">Day ${i+1} :</div><input class="in" value="${f4(v)}" ${dis?'disabled':''}></div>`).join('');
+}
+function renderScoped(){
+  const s=activeSet(); loading=true;
+  renderOcc(s.occ); renderLM(s.lm); renderLT(s.lt);
+  [['occ',s.occ],['lm',s.lm],['lt',s.lt]].forEach(([k,d])=>$(`.rule-sw[data-key=${k}]`).classList.toggle('on',d.on));
+  applyHideFilter(); loading=false;
+}
+function readScoped(){
+  const s=activeSet();
+  s.occ.on=$('.rule-sw[data-key=occ]').classList.contains('on');
+  s.occ.rows=$$('#occBody tr').map(tr=>{const i=tr.querySelectorAll('input');return {s:i[0].value,e:i[1].value,a1:i[2].value,sc:i[3].value,a2:i[4].value};});
+  s.lm.on=$('.rule-sw[data-key=lm]').classList.contains('on');
+  s.lm.rows=$$('#lmBody tr').map(tr=>{const i=tr.querySelectorAll('input');return {t:i[0].value,ap:tr.querySelector('select').value,g:i[1].value,l:i[2].value,a1:i[3].value,sc:i[4].value,a2:i[5].value};});
+  s.lt.on=$('.rule-sw[data-key=lt]').classList.contains('on');
+  s.lt.win=+$('#ltWindow').value||s.lt.win;
+  s.lt.vals=$$('#ltGrid input').map(x=>x.value);
+}
+
+/* row add / remove for occupancy & last minute */
+function rowActions(bodySel,key,blank){
+  $(bodySel).addEventListener('click',e=>{
+    const tr=e.target.closest('tr'); if(!tr)return;
+    if(e.target.closest('.rm')&&!e.target.closest('.rm').disabled){readScoped();const d=activeSet()[key];if(d.rows.length===1){toast('At least one row is required','warn');return;}d.rows.splice(+tr.dataset.i,1);markEdited();renderScoped();}
+    if(e.target.closest('.ad')&&!e.target.closest('.ad').disabled){readScoped();const d=activeSet()[key];d.rows.push(blank(d.rows));markEdited();renderScoped();}
+  });
+}
+rowActions('#occBody','occ',rows=>{const last=rows[rows.length-1];const st=last&&last.e!==''?(+last.e+0.01).toFixed(2):'';return {s:st,e:'',a1:'',sc:'',a2:''};});
+rowActions('#lmBody','lm',()=>({t:'',ap:'Today',g:'',l:'',a1:'',sc:'',a2:''}));
+
+/* Lead time window + fill */
+$('#ltWindow').addEventListener('change',()=>{readScoped();const d=activeSet().lt;let n=Math.max(1,Math.min(90,parseInt($('#ltWindow').value)||d.vals.length));const old=d.vals.map(Number);d.vals=Array.from({length:n},(_,i)=>i<old.length?old[i]:(old[old.length-1]||1));d.win=n;markEdited();renderScoped();});
+$('#ltFill').addEventListener('click',()=>{
+  readScoped(); const d=activeSet().lt;
+  const fd=parseInt($('#ltFD').value), td=parseInt($('#ltTD').value), ff=parseFloat($('#ltFF').value), tf=parseFloat($('#ltTF').value);
+  if([fd,td,ff,tf].some(isNaN)){toast('Enter From Day, To Day, From Factor and To Factor','warn');return;}
+  if(fd<1||td>d.vals.length||fd>td){toast('Day range must be within 1 and '+d.vals.length,'warn');return;}
+  const vals=ltLinear(td-fd+1,ff,tf); for(let i=fd;i<=td;i++)d.vals[i-1]=vals[i-fd];
+  markEdited(); renderScoped(); toast('Days '+fd+' to '+td+' filled');
+});
+
+/* ======================= GENERIC BEHAVIOUR ======================= */
+function applyEnabled(sec){
+  const on=sec.querySelector('.rule-sw').classList.contains('on');
+  sec.querySelectorAll('table input, table button.add, table select, .lt-top input, .lt-top button, .lt-grid input, .act button').forEach(el=>el.disabled=!on);
+  sec.querySelectorAll('.datebox').forEach(d=>d.classList.toggle('dis',!on));
+  sec.querySelectorAll('.day,.chk').forEach(b=>{b.disabled=!on;b.style.opacity=on?'':'.55';});
+}
+function applyHideFilter(){ const hide=$('#swHide').classList.contains('on'); $$('section.rule').forEach(s=>s.classList.toggle('hidden-by-filter',hide&&!s.querySelector('.rule-sw').classList.contains('on'))); }
+
+document.addEventListener('click',e=>{
+  const sw=e.target.closest('.rule-sw');
+  if(sw){sw.classList.toggle('on');const sec=sw.closest('section');applyEnabled(sec);if(sw.dataset.key){readScoped();markEdited();}applyHideFilter();return;}
+  const add=e.target.closest('.grp .add');
+  if(add&&!add.disabled){const inp=add.nextElementSibling;const v=inp.value.trim();if(v===''||isNaN(+v)){inp.focus();return;}inp.value=f4(-(+v));inp.dispatchEvent(new Event('input',{bubbles:true}));}
+});
+$('#swHide').addEventListener('click',function(){this.classList.toggle('on');applyHideFilter();});
+$('#swDynamic').addEventListener('click',function(){this.classList.toggle('on');toast(this.classList.contains('on')?'Dynamic pricing enabled':'Dynamic pricing disabled','info');});
+$('#scroll').addEventListener('input',e=>{if(!loading&&e.target.closest('.rt-scope'))markEdited();});
+$('#scroll').addEventListener('change',e=>{if(!loading&&e.target.closest('.rt-scope'))markEdited();});
+$('#scroll').addEventListener('focusout',e=>{const t=e.target;if(t.classList&&t.classList.contains('in')&&t.tagName==='INPUT'&&t.closest('.grp')&&t.closest('.grp').querySelector('.add')&&t.value!==''&&!isNaN(+t.value))t.value=f4(t.value);});
+
+/* ======================= OCCUPANCY BASED ON (NEW) ======================= */
+const sel=$('#occBased');
+sel.querySelector('.trigger').addEventListener('click',e=>{e.stopPropagation();sel.classList.toggle('open');});
+document.addEventListener('click',e=>{if(!sel.contains(e.target))sel.classList.remove('open');});
+sel.querySelectorAll('.opt').forEach(o=>o.addEventListener('click',()=>{sel.classList.remove('open');setMode(o.dataset.v);}));
+
+function setMode(m){
+  if(m===MODE)return;
+  readScoped();
+  MODE=m;
+  sel.querySelector('.val').textContent=m==='property'?'Property':'Room Type';
+  sel.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o.dataset.v===m));
+  document.body.classList.toggle('rt-mode',m==='roomtype');
+  if(m==='roomtype'){renderRooms();}
+  renderScoped();
+  flashScoped();
+  toast(m==='roomtype'?'Occupancy, Last Minute and Lead Time rules are now configured per room type':'Occupancy, Last Minute and Lead Time rules are now configured at property level','info');
+}
+
+/* ======================= ROOM TYPE BAR (NEW) ======================= */
+const statusText={done:'Configured',edit:'Edited, not saved',none:'Not configured'};
+function renderRooms(){
+  $('#rtList').innerHTML=rooms.map((r,i)=>`<div class="opt ${i===CUR?'sel':''}" data-i="${i}"><span>${r.name}</span><span class="s st-${r.status}"><span class="dot"></span>${statusText[r.status]}</span></div>`).join('');
+  $('#rtSelect .val').textContent=rooms[CUR].name;
+  $('#rtStatus').className='rt-status st-'+rooms[CUR].status;
+  $('#rtStatus').innerHTML='<span class="dot"></span>'+statusText[rooms[CUR].status];
+  $('#rtName').textContent=rooms[CUR].name;
+  $('#rtHint').textContent=rooms[CUR].status==='none'?' Not configured yet, so property level rules apply to this room type until you save.':'';
+  $$('.rt-tag-name').forEach(t=>t.textContent=rooms[CUR].name);
+  $('#rtCounter').textContent=(CUR+1)+' of '+rooms.length;
+  $('#rtPrev').disabled=CUR===0;
+  $('#rtNext').textContent=CUR===rooms.length-1?'Finish':'Next Room Type';
+}
+function selectRoom(i){ if(i===CUR)return; readScoped(); CUR=i; renderRooms(); renderScoped(); flashScoped(); }
+function flashScoped(){ $$('.rt-scope').forEach(s=>{s.classList.remove('rt-flash');void s.offsetWidth;s.classList.add('rt-flash');}); }
+function markEdited(){ if(MODE==='roomtype'&&rooms[CUR].status!=='edit'){rooms[CUR].status='edit';renderRooms();} }
+const rtSel=$('#rtSelect');
+rtSel.querySelector('.trigger').addEventListener('click',e=>{e.stopPropagation();rtSel.classList.toggle('open');});
+document.addEventListener('click',e=>{if(!rtSel.contains(e.target))rtSel.classList.remove('open');});
+$('#rtList').addEventListener('click',e=>{const b=e.target.closest('.opt');if(b){rtSel.classList.remove('open');selectRoom(+b.dataset.i);}});
+$('#rtPrev').addEventListener('click',()=>{if(CUR>0)selectRoom(CUR-1);});
+$('#rtNext').addEventListener('click',()=>{
+  readScoped();
+  if(rooms[CUR].status!=='none'){rooms[CUR].status=rooms[CUR].status==='edit'?'edit':'done';}
+  if(CUR<rooms.length-1){selectRoom(CUR+1);$('#rtbar').scrollIntoView({behavior:'smooth',block:'start'});}
+  else{const pending=rooms.filter(r=>r.status==='none');pending.length?toast(pending.length+' room type(s) not configured yet','warn'):toast('All room types are ready. Click Save to apply.');}
+});
+/* ======================= FOOTER ======================= */
+$('#btnSave').addEventListener('click',()=>{
+  readScoped(); readSeason();
+  if(MODE==='roomtype'){
+    const pending=rooms.filter(r=>r.status==='none');
+    if(pending.length){
+      modal(`<h4>${IC.warn}Some room types are not configured</h4><p>These room types have no room type level rules yet. Property level Occupancy, Last Minute and Lead Time rules will apply to them until they are configured.</p><ul>${pending.map(r=>'<li>'+r.name+'</li>').join('')}</ul><div class="b"><button class="btn" onclick="closeModal()">Go back</button><button class="btn primary" onclick="doSave()">Save anyway</button></div>`);
+      return;
+    }
+  }
+  doSave();
+});
+function doSave(){ closeModal(); if(MODE==='roomtype'){rooms.forEach(r=>{if(r.status==='edit')r.status='done';});renderRooms();toast('Rules saved. Room type level rules updated for '+rooms.filter(r=>r.status==='done').length+' room types');}else toast('Rules saved successfully'); }
+$('#btnCancel').addEventListener('click',()=>{
+  modal(`<h4>${IC.warn}Discard changes?</h4><p>All unsaved changes on this page will be lost.</p><div class="b"><button class="btn" onclick="closeModal()">Keep editing</button><button class="btn primary" onclick="doCancel()">Discard</button></div>`);
+});
+function doCancel(){ closeModal(); propSet=clone(INITIAL.prop); rooms=clone(INITIAL.rooms); if(MODE==='roomtype')renderRooms(); renderScoped(); renderMonth(); renderWeek(); seasonRows=[{from:'22/12/2026',to:'06/01/2027',a1:'',sc:2,a2:'',all:true,days:[1,1,1,1,1,1,1],title:'Xmas_new Year'}]; renderSeason(); applyEnabled($('[data-rule=weekday]')); toast('Changes discarded','info'); }
+$('#btnPreview').addEventListener('click',()=>toast(MODE==='roomtype'?'Preview Calendar for '+rooms[CUR].name:'Preview Calendar for property','info'));
+
+/* No navigation in concept */
+$$('.side .it, .hdr button, .prop, .side .expand').forEach(el=>el.addEventListener('click',e=>e.preventDefault()));
+
+/* ======================= INIT ======================= */
+renderMonth(); renderWeek(); renderSeason();
+$$('section.rule[data-rule=month], section.rule[data-rule=weekday], section.rule[data-rule=season]').forEach(applyEnabled);
+renderScoped();
+</script>
+</body>
+</html>
